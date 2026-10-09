@@ -11,17 +11,14 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "command-line-application",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Use:   "command line application [input CSV path] [output JSON lines path]",
+	Short: "Convert housing CSV data to JSON lines",
+	Long:  `The program reads a CSV file and converts it to a file with JSON lines. Only 2 arguments are required: CSV input and JSON lines file output`,
+	Args:  cobra.ExactArgs(2),
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
