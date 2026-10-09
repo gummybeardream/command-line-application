@@ -4,6 +4,7 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -19,6 +20,17 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	RunE: func(cmd *cobra.Command, args []string) error {
+		inputPath := args[0]
+
+		//open the input file here
+		file, err := os.Open(inputPath)
+
+		if err != nil {
+			return fmt.Errorf("failed to open file: %w", err)
+		}
+
+		defer file.Close()
+
 		return nil
 	},
 }
