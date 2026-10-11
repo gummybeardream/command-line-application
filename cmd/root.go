@@ -11,6 +11,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// defining the housing struct
+type Housing struct {
+	Value    int
+	Income   float64
+	Age      int
+	Rooms    int
+	Bedrooms int
+	Pop      int
+	Hh       int
+}
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "command line application [input CSV path] [output JSON lines path]",
