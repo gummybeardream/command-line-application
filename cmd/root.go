@@ -11,15 +11,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// defining the housing struct
+// defining the housing struct and add JSON struct tags
 type Housing struct {
-	Value    int
-	Income   float64
-	Age      int
-	Rooms    int
-	Bedrooms int
-	Pop      int
-	Hh       int
+	Value    int     `json:"value"`
+	Income   float64 `json:"income"`
+	Age      int     `json:"age"`
+	Rooms    int     `json:"rooms"`
+	Bedrooms int     `json:"bedrooms"`
+	Pop      int     `json:"pop"`
+	Hh       int     `json:"hh"`
 }
 
 // rootCmd represents the base command when called without any subcommands
