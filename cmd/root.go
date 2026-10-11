@@ -4,6 +4,7 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"encoding/csv"
 	"fmt"
 	"os"
 
@@ -25,11 +26,24 @@ var rootCmd = &cobra.Command{
 		//open the input file here
 		file, err := os.Open(inputPath)
 
+		//return your error if file does not open
 		if err != nil {
 			return fmt.Errorf("failed to open file: %w", err)
 		}
 
 		defer file.Close()
+
+		//create csv reader
+		reader := csv.NewReader(file)
+		header, err := reader.Read()
+
+		//return error if header cannot be read
+		if err != nil {
+			return fmt.Errorf("failed to read csv file: %w", err)
+		}
+
+		//print header here
+		fmt.Println(header)
 
 		return nil
 	},
