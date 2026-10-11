@@ -6,9 +6,9 @@ package cmd
 import (
 	"encoding/csv"
 	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
+	"os"
+	"strconv"
 )
 
 // defining the housing struct and add JSON struct tags
@@ -44,7 +44,7 @@ var rootCmd = &cobra.Command{
 
 		defer file.Close()
 
-		//create csv reader
+		//create csv reader and read header
 		reader := csv.NewReader(file)
 		header, err := reader.Read()
 
@@ -53,19 +53,83 @@ var rootCmd = &cobra.Command{
 			return fmt.Errorf("failed to read CSV: %w", err)
 		}
 
-		//print header here
 		fmt.Println(header)
 
+		//read first record
 		record, err := reader.Read()
 
-		//return error if first row cannot be read
+		//return error if first record cannot be read
 		if err != nil {
 			return fmt.Errorf("failed to read first CSV record: %w", err)
 
 		}
 
-		//print first row here
-		fmt.Println(record)
+		//convert record[0]
+		value, err := strconv.Atoi(record[0])
+
+		//return error if string not converted to int
+		if err != nil {
+			return fmt.Errorf("failed to convert string to int: %w", err)
+		}
+		//convert record[1]
+		income, err := strconv.ParseFloat(record[1], 64)
+
+		//return error if string not converted to int
+		if err != nil {
+			return fmt.Errorf("failed to convert string to float64: %w", err)
+		}
+
+		//convert record[2]
+		age, err := strconv.Atoi(record[2])
+
+		//return error if string not converted to int
+		if err != nil {
+			return fmt.Errorf("failed to convert string to int: %w", err)
+		}
+
+		//convert record[3]
+		rooms, err := strconv.Atoi(record[3])
+
+		//return error if string not converted to int
+		if err != nil {
+			return fmt.Errorf("failed to convert string to int: %w", err)
+		}
+
+		//convert record[4]
+		bedrooms, err := strconv.Atoi(record[4])
+
+		//return error if string not converted to int
+		if err != nil {
+			return fmt.Errorf("failed to convert string to int: %w", err)
+		}
+
+		//convert record[5]
+		pop, err := strconv.Atoi(record[5])
+
+		//return error if string not converted to int
+		if err != nil {
+			return fmt.Errorf("failed to convert string to int: %w", err)
+		}
+
+		//convert record[6]
+		hh, err := strconv.Atoi(record[6])
+
+		//return error if string not converted to int
+		if err != nil {
+			return fmt.Errorf("failed to convert string to int: %w", err)
+		}
+
+		house := Housing{
+			Value:    value,
+			Income:   income,
+			Age:      age,
+			Rooms:    rooms,
+			Bedrooms: bedrooms,
+			Pop:      pop,
+			Hh:       hh,
+		}
+
+		fmt.Println(house)
 
 		return nil
 
