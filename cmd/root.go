@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
@@ -130,6 +131,16 @@ var rootCmd = &cobra.Command{
 		}
 
 		fmt.Println(house)
+
+		//encode one housing value
+		data, err := json.Marshal(house)
+
+		//return error if it does not convert to JSON
+		if err != nil {
+			return fmt.Errorf("failed to encode housing record as JSON: %w", err)
+		}
+
+		fmt.Println(string(data))
 
 		return nil
 
