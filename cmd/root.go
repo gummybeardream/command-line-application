@@ -34,6 +34,7 @@ var rootCmd = &cobra.Command{
 	// has an action associated with it:
 	RunE: func(cmd *cobra.Command, args []string) error {
 		inputPath := args[0]
+		outputPath := args[1]
 
 		//open the input file here
 		file, err := os.Open(inputPath)
@@ -130,17 +131,24 @@ var rootCmd = &cobra.Command{
 			Hh:       hh,
 		}
 
-		fmt.Println(house)
+		//create JSON output file
+		outputFile, err := os.Create(outputPath)
 
-		//encode one housing value
-		data, err := json.Marshal(house)
-
-		//return error if it does not convert to JSON
+		//return your error if file does not create
 		if err != nil {
-			return fmt.Errorf("failed to encode housing record as JSON: %w", err)
+			return fmt.Errorf("failed to create file: %w", err)
 		}
 
-		fmt.Println(string(data))
+		defer outputFile.Close()
+
+		//create encoder JSON file
+		encoder := json.NewEncoder(outputFile)
+		err = encoder.Encode(house)
+
+		//return error if jsonrecord cannot be encoded
+		if err != nil {
+			return fmt.Errorf("failed to encode file: %w", err)
+		}
 
 		return nil
 
