@@ -13,7 +13,12 @@ import (
 )
 
 // defining the housing struct and add JSON struct tags
-type Housing struct {
+
+type Houses struct {
+	Records []House `json:"houses"`
+}
+
+type House struct {
 	Value    int     `json:"value"`
 	Income   float64 `json:"income"`
 	Age      int     `json:"age"`
@@ -121,7 +126,7 @@ var rootCmd = &cobra.Command{
 			return fmt.Errorf("failed to convert string to int: %w", err)
 		}
 
-		house := Housing{
+		house := House{
 			Value:    value,
 			Income:   income,
 			Age:      age,
@@ -129,6 +134,10 @@ var rootCmd = &cobra.Command{
 			Bedrooms: bedrooms,
 			Pop:      pop,
 			Hh:       hh,
+		}
+
+		houses := Houses{
+			Records: []House{house},
 		}
 
 		//create JSON output file
@@ -143,7 +152,7 @@ var rootCmd = &cobra.Command{
 
 		//create encoder JSON file
 		encoder := json.NewEncoder(outputFile)
-		err = encoder.Encode(house)
+		err = encoder.Encode(houses)
 
 		//return error if jsonrecord cannot be encoded
 		if err != nil {
