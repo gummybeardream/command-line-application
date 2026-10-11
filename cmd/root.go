@@ -39,13 +39,25 @@ var rootCmd = &cobra.Command{
 
 		//return error if header cannot be read
 		if err != nil {
-			return fmt.Errorf("failed to read csv file: %w", err)
+			return fmt.Errorf("failed to read CSV: %w", err)
 		}
 
 		//print header here
 		fmt.Println(header)
 
+		record, err := reader.Read()
+
+		//return error if first row cannot be read
+		if err != nil {
+			return fmt.Errorf("failed to read first CSV record: %w", err)
+
+		}
+
+		//print first row here
+		fmt.Println(record)
+
 		return nil
+
 	},
 }
 
