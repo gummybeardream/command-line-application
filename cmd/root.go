@@ -6,28 +6,34 @@ package cmd
 import (
 	"encoding/csv"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/spf13/cobra"
 )
 
-// defining the housing struct and add JSON struct tags
+var (
+	ErrInvalidInputFile  = errors.New("input file is not a CSV")
+	ErrInvalidOutputFile = errors.New("output file is not a .jl or .json file")
+)
 
+// defining the housing struct and add JSON struct tags
 type Houses struct {
 	Records []House `json:"houses"`
 }
 
 type House struct {
-	Value    float64     `json:"value"`
+	Value    float64 `json:"value"`
 	Income   float64 `json:"income"`
-	Age      int64    `json:"age"`
-	Rooms    int64     `json:"rooms"`
-	Bedrooms int64    `json:"bedrooms"`
-	Pop      int64    `json:"pop"`
-	Hh       int64    `json:"hh"`
+	Age      int64   `json:"age"`
+	Rooms    int64   `json:"rooms"`
+	Bedrooms int64   `json:"bedrooms"`
+	Pop      int64   `json:"pop"`
+	Hh       int64   `json:"hh"`
 }
 
 // rootCmd represents the base command when called without any subcommands
@@ -42,6 +48,10 @@ var rootCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		inputPath := args[0]
 		outputPath := args[1]
+
+		if err := ValidateArgs(inputPath, outputPath); err != nil {
+			return fmt.Errorf("input validation failed: %w", err)
+		}
 
 		houses := Houses{
 			Records: []House{},
@@ -87,7 +97,7 @@ var rootCmd = &cobra.Command{
 				fmt.Println(record)
 				return fmt.Errorf("value failed to convert from string to float: %w", err)
 			}
-			
+
 			//convert income to float64
 			income, err := strconv.ParseFloat(record[1], 64)
 
@@ -173,6 +183,19 @@ func Execute() {
 	if err != nil {
 		os.Exit(1)
 	}
+}
+
+func ValidateArgs(input, output string) error {
+	inputExtension := filepath.Ext(input)
+	if inputExtension != ".csv" {
+		return ErrInvalidInputFile
+	}
+
+	outputExtension := filepath.Ext(output)
+	if outputExtension != ".jl" && outputExtension != ".json" {
+		return ErrInvalidOutputFile
+	}
+	return nil
 }
 
 func init() {
