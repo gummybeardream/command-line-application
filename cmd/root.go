@@ -21,13 +21,13 @@ type Houses struct {
 }
 
 type House struct {
-	Value    int     `json:"value"`
+	Value    float64     `json:"value"`
 	Income   float64 `json:"income"`
-	Age      int     `json:"age"`
-	Rooms    int     `json:"rooms"`
-	Bedrooms int     `json:"bedrooms"`
-	Pop      int     `json:"pop"`
-	Hh       int     `json:"hh"`
+	Age      int64    `json:"age"`
+	Rooms    int64     `json:"rooms"`
+	Bedrooms int64    `json:"bedrooms"`
+	Pop      int64    `json:"pop"`
+	Hh       int64    `json:"hh"`
 }
 
 // rootCmd represents the base command when called without any subcommands
@@ -81,13 +81,11 @@ var rootCmd = &cobra.Command{
 				return fmt.Errorf("failed to read first CSV record: %w", err)
 			}
 
-			//convert value to int
-			value, err := strconv.Atoi(record[0])
-
+			value, err := strconv.ParseFloat(record[0], 64)
 
 			if err != nil {
 				fmt.Println(record)
-				return fmt.Errorf("value failed to convert from string to int: %w", err)
+				return fmt.Errorf("value failed to convert from string to float: %w", err)
 			}
 			
 			//convert income to float64
@@ -97,34 +95,34 @@ var rootCmd = &cobra.Command{
 				return fmt.Errorf("income failed to convert from string to float64: %w", err)
 			}
 			//convert age to int
-			age, err := strconv.Atoi(record[2])
+			age, err := strconv.ParseInt(record[2], 10, 64)
 
 			if err != nil {
 				return fmt.Errorf("age failed to convert from string to int: %w", err)
 			}
 			//convert rooms to int
-			rooms, err := strconv.Atoi(record[3])
+			rooms, err := strconv.ParseInt(record[3], 10, 64)
 
 			if err != nil {
 				return fmt.Errorf("rooms failed to convert from string to int: %w", err)
 			}
 
 			//convert bedrooms to int
-			bedrooms, err := strconv.Atoi(record[4])
+			bedrooms, err := strconv.ParseInt(record[4], 10, 64)
 
 			if err != nil {
 				return fmt.Errorf(" bedrooms failed to convert from string to int: %w", err)
 			}
 
 			//convert pop to int
-			pop, err := strconv.Atoi(record[5])
+			pop, err := strconv.ParseInt(record[5], 10, 64)
 
 			if err != nil {
 				return fmt.Errorf("pop failed to convert from string to int: %w", err)
 			}
 
 			//convert hh to int
-			hh, err := strconv.Atoi(record[6])
+			hh, err := strconv.ParseInt(record[6], 10, 64)
 
 			if err != nil {
 				return fmt.Errorf("hh failed to convert from string to int: %w", err)
