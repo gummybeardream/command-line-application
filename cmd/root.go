@@ -81,74 +81,18 @@ var rootCmd = &cobra.Command{
 		for {
 			record, err := reader.Read()
 
+			// break loop when file is empty
 			if err == io.EOF {
 				break
 			}
 
-			//return error if first record cannot be read
+			// return error if first record cannot be read
 			if err != nil {
 				return fmt.Errorf("failed to read first CSV record: %w", err)
 			}
 
-			value, err := strconv.ParseFloat(record[0], 64)
-
-			if err != nil {
-				fmt.Println(record)
-				return fmt.Errorf("value failed to convert from string to float: %w", err)
-			}
-
-			//convert income to float64
-			income, err := strconv.ParseFloat(record[1], 64)
-
-			if err != nil {
-				return fmt.Errorf("income failed to convert from string to float64: %w", err)
-			}
-			//convert age to int
-			age, err := strconv.ParseInt(record[2], 10, 64)
-
-			if err != nil {
-				return fmt.Errorf("age failed to convert from string to int: %w", err)
-			}
-			//convert rooms to int
-			rooms, err := strconv.ParseInt(record[3], 10, 64)
-
-			if err != nil {
-				return fmt.Errorf("rooms failed to convert from string to int: %w", err)
-			}
-
-			//convert bedrooms to int
-			bedrooms, err := strconv.ParseInt(record[4], 10, 64)
-
-			if err != nil {
-				return fmt.Errorf(" bedrooms failed to convert from string to int: %w", err)
-			}
-
-			//convert pop to int
-			pop, err := strconv.ParseInt(record[5], 10, 64)
-
-			if err != nil {
-				return fmt.Errorf("pop failed to convert from string to int: %w", err)
-			}
-
-			//convert hh to int
-			hh, err := strconv.ParseInt(record[6], 10, 64)
-
-			if err != nil {
-				return fmt.Errorf("hh failed to convert from string to int: %w", err)
-			}
-
-			house := House{
-				Value:    value,
-				Income:   income,
-				Age:      age,
-				Rooms:    rooms,
-				Bedrooms: bedrooms,
-				Pop:      pop,
-				Hh:       hh,
-			}
-
+			house, err := processHousingRecord(record)
 			houses.Records = append(houses.Records, house)
-
 		}
 
 		//create JSON output file
@@ -195,6 +139,55 @@ func ValidateArgs(input, output string) error {
 		return ErrInvalidOutputFile
 	}
 	return nil
+}
+
+func processHousingRecord(record []string) (House, error) {
+	value, err := strconv.ParseFloat(record[0], 64)
+
+	if err != nil {
+		fmt.Println(record)
+		return House{}, fmt.Errorf("value failed to convert from string to float: %w", err)
+	}
+
+	income, err := strconv.ParseFloat(record[1], 64)
+	if err != nil {
+		return House{}, fmt.Errorf("income failed to convert from string to float64: %w", err)
+	}
+
+	age, err := strconv.ParseInt(record[2], 10, 64)
+	if err != nil {
+		return House{}, fmt.Errorf("age failed to convert from string to int: %w", err)
+	}
+
+	rooms, err := strconv.ParseInt(record[3], 10, 64)
+	if err != nil {
+		return House{}, fmt.Errorf("rooms failed to convert from string to int: %w", err)
+	}
+
+	bedrooms, err := strconv.ParseInt(record[4], 10, 64)
+	if err != nil {
+		return House{}, fmt.Errorf(" bedrooms failed to convert from string to int: %w", err)
+	}
+
+	pop, err := strconv.ParseInt(record[5], 10, 64)
+	if err != nil {
+		return House{}, fmt.Errorf("pop failed to convert from string to int: %w", err)
+	}
+
+	hh, err := strconv.ParseInt(record[6], 10, 64)
+	if err != nil {
+		return House{}, fmt.Errorf("hh failed to convert from string to int: %w", err)
+	}
+
+	return House{
+		Value:    value,
+		Income:   income,
+		Age:      age,
+		Rooms:    rooms,
+		Bedrooms: bedrooms,
+		Pop:      pop,
+		Hh:       hh,
+	}, nil
 }
 
 func init() {
