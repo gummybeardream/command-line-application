@@ -7,9 +7,11 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
-	"github.com/spf13/cobra"
+	"io"
 	"os"
 	"strconv"
+
+	"github.com/spf13/cobra"
 )
 
 // defining the housing struct and add JSON struct tags
@@ -41,6 +43,10 @@ var rootCmd = &cobra.Command{
 		inputPath := args[0]
 		outputPath := args[1]
 
+		houses := Houses{
+			Records: []House{},
+		}
+
 		//open the input file here
 		file, err := os.Open(inputPath)
 
@@ -63,81 +69,79 @@ var rootCmd = &cobra.Command{
 		fmt.Println(header)
 
 		//read first record
-		record, err := reader.Read()
+		for {
+			record, err := reader.Read()
 
-		//return error if first record cannot be read
-		if err != nil {
-			return fmt.Errorf("failed to read first CSV record: %w", err)
+			if err == io.EOF {
+				break
+			}
 
-		}
+			//return error if first record cannot be read
+			if err != nil {
+				return fmt.Errorf("failed to read first CSV record: %w", err)
+			}
 
-		//convert record[0]
-		value, err := strconv.Atoi(record[0])
+			//convert value to int
+			value, err := strconv.Atoi(record[0])
 
-		//return error if string not converted to int
-		if err != nil {
-			return fmt.Errorf("failed to convert string to int: %w", err)
-		}
-		//convert record[1]
-		income, err := strconv.ParseFloat(record[1], 64)
 
-		//return error if string not converted to int
-		if err != nil {
-			return fmt.Errorf("failed to convert string to float64: %w", err)
-		}
+			if err != nil {
+				fmt.Println(record)
+				return fmt.Errorf("value failed to convert from string to int: %w", err)
+			}
+			
+			//convert income to float64
+			income, err := strconv.ParseFloat(record[1], 64)
 
-		//convert record[2]
-		age, err := strconv.Atoi(record[2])
+			if err != nil {
+				return fmt.Errorf("income failed to convert from string to float64: %w", err)
+			}
+			//convert age to int
+			age, err := strconv.Atoi(record[2])
 
-		//return error if string not converted to int
-		if err != nil {
-			return fmt.Errorf("failed to convert string to int: %w", err)
-		}
+			if err != nil {
+				return fmt.Errorf("age failed to convert from string to int: %w", err)
+			}
+			//convert rooms to int
+			rooms, err := strconv.Atoi(record[3])
 
-		//convert record[3]
-		rooms, err := strconv.Atoi(record[3])
+			if err != nil {
+				return fmt.Errorf("rooms failed to convert from string to int: %w", err)
+			}
 
-		//return error if string not converted to int
-		if err != nil {
-			return fmt.Errorf("failed to convert string to int: %w", err)
-		}
+			//convert bedrooms to int
+			bedrooms, err := strconv.Atoi(record[4])
 
-		//convert record[4]
-		bedrooms, err := strconv.Atoi(record[4])
+			if err != nil {
+				return fmt.Errorf(" bedrooms failed to convert from string to int: %w", err)
+			}
 
-		//return error if string not converted to int
-		if err != nil {
-			return fmt.Errorf("failed to convert string to int: %w", err)
-		}
+			//convert pop to int
+			pop, err := strconv.Atoi(record[5])
 
-		//convert record[5]
-		pop, err := strconv.Atoi(record[5])
+			if err != nil {
+				return fmt.Errorf("pop failed to convert from string to int: %w", err)
+			}
 
-		//return error if string not converted to int
-		if err != nil {
-			return fmt.Errorf("failed to convert string to int: %w", err)
-		}
+			//convert hh to int
+			hh, err := strconv.Atoi(record[6])
 
-		//convert record[6]
-		hh, err := strconv.Atoi(record[6])
+			if err != nil {
+				return fmt.Errorf("hh failed to convert from string to int: %w", err)
+			}
 
-		//return error if string not converted to int
-		if err != nil {
-			return fmt.Errorf("failed to convert string to int: %w", err)
-		}
+			house := House{
+				Value:    value,
+				Income:   income,
+				Age:      age,
+				Rooms:    rooms,
+				Bedrooms: bedrooms,
+				Pop:      pop,
+				Hh:       hh,
+			}
 
-		house := House{
-			Value:    value,
-			Income:   income,
-			Age:      age,
-			Rooms:    rooms,
-			Bedrooms: bedrooms,
-			Pop:      pop,
-			Hh:       hh,
-		}
+			houses.Records = append(houses.Records, house)
 
-		houses := Houses{
-			Records: []House{house},
 		}
 
 		//create JSON output file
