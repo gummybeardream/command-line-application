@@ -69,14 +69,13 @@ var rootCmd = &cobra.Command{
 
 		//create csv reader and read header
 		reader := csv.NewReader(file)
-		header, err := reader.Read()
+
+		_, err = reader.Read()
 
 		//return error if header cannot be read
 		if err != nil {
 			return fmt.Errorf("failed to read CSV: %w", err)
 		}
-
-		fmt.Println(header)
 
 		//read first record
 		for {
@@ -171,8 +170,8 @@ var rootCmd = &cobra.Command{
 			return fmt.Errorf("failed to encode file: %w", err)
 		}
 
+		fmt.Printf("Sucess! Created %s\n", outputPath)
 		return nil
-
 	},
 }
 
